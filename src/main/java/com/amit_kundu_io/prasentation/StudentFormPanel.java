@@ -13,8 +13,8 @@ import java.awt.*;
  */
 public class StudentFormPanel extends JPanel {
 
-    public final JTextField idField = UIComponents.styledField();
     public final JTextField nameField = UIComponents.styledField();
+    public final JTextField idField = UIComponents.styledField();
     public final JTextField emailField = UIComponents.styledField();
     public final JTextField courseField = UIComponents.styledField();
 
@@ -48,10 +48,22 @@ public class StudentFormPanel extends JPanel {
         gc.fill = GridBagConstraints.HORIZONTAL;
 
         int row = 0;
-        addFormRow(form, gc, row++, "Student ID *", idField, "Name *", nameField);
+        addFormRow(form, gc, row++, "Name *", nameField);
         addFormRow(form, gc, row++, "Email", emailField, "Course", courseField);
 
         return form;
+    }
+
+
+    private void addFormRow(JPanel form, GridBagConstraints gc, int row,
+                            String label, JTextField field) {
+
+        gc.gridx = 0;
+        gc.gridy = row;
+        form.add(new JLabel(label), gc);
+
+        gc.gridx = 1;
+        form.add(field, gc);
     }
 
     private void addFormRow(JPanel form, GridBagConstraints gc, int row,
@@ -99,13 +111,12 @@ public class StudentFormPanel extends JPanel {
      * Clears all input fields.
      */
     public void clear() {
-        idField.setText("");
         nameField.setText("");
         emailField.setText("");
         courseField.setText("");
     }
 
-    public void fill(String id, String name, String email, String course, String marks) {
+    public void fill(String id, String name, String email, String course) {
         idField.setText(id);
         nameField.setText(name);
         emailField.setText(email);

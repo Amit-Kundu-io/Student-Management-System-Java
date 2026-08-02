@@ -180,8 +180,7 @@ public class StudentManagementUI {
                         tablePanel.model.getValueAt(r, 0).toString(), // id
                         tablePanel.model.getValueAt(r, 1).toString(), // name
                         tablePanel.model.getValueAt(r, 2).toString(), // email
-                        tablePanel.model.getValueAt(r, 3).toString(), // course
-                        tablePanel.model.getValueAt(r, 4).toString()  // marks
+                        tablePanel.model.getValueAt(r, 3).toString()
                 );
             }
         });
@@ -272,36 +271,30 @@ public class StudentManagementUI {
 
     /** Handles the "Insert" button: validates input, then adds a new student. */
     private void onInsert() {
-        // ---- Step 1: read and validate form input ----
-        String id = formPanel.idField.getText().trim();
+        //  read and validate form input ----
         String name = formPanel.nameField.getText().trim();
+        String id = formPanel.idField.getText().trim();
         String email = formPanel.emailField.getText().trim();
         String course = formPanel.courseField.getText().trim();
 
-        if (id.isEmpty() || name.isEmpty()) {
+        if ( name.isEmpty()) {
             warn("Student ID and Name are required.");
             return;
         }
-        if (!id.matches("\\d+")) {
-            warn("Student ID must be numeric.");
-            return;
-        }
+
         if (!email.isEmpty() && !isValidEmail(email)) {
             warn("Please enter a valid email address.");
             return;
         }
 
         // Build the object we'll hand to the data layer.
-        Student s = new Student(id, name, email, course);
+        Student s = new Student(Integer.parseInt(id),name, email, course);
 
-        // ---- Step 2 & 3: save in the background, then refresh/report on the EDT ----
+        //  save in the background, then refresh/report on the EDT ----
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
             @Override
             protected Void doInBackground() throws Exception {
-                // Guard against duplicate IDs before inserting.
-                if (studentDataService.findById(id) != null) {
-                    throw new IllegalStateException("A student with ID " + id + " already exists.");
-                }
+
                 studentDataService.insert(s);
                 return null;
             }
@@ -329,18 +322,14 @@ public class StudentManagementUI {
             return;
         }
 
-        // ---- Step 1: read and validate form input ----
+        //  read and validate form input ----
         String id = formPanel.idField.getText().trim();
         String name = formPanel.nameField.getText().trim();
         String email = formPanel.emailField.getText().trim();
         String course = formPanel.courseField.getText().trim();
 
-        if (id.isEmpty() || name.isEmpty()) {
+        if ( name.isEmpty()) {
             warn("Student ID and Name are required.");
-            return;
-        }
-        if (!id.matches("\\d+")) {
-            warn("Student ID must be numeric.");
             return;
         }
         if (!email.isEmpty() && !isValidEmail(email)) {
@@ -352,25 +341,13 @@ public class StudentManagementUI {
         // The ID currently stored in the selected row, BEFORE any edits.
         // We need this to detect whether the user changed the ID itself.
         String originalId = tablePanel.model.getValueAt(row, 0).toString();
-        Student s = new Student(id, name, email, course);
+        Student s = new Student( Integer.parseInt(id), name, email, course);
 
-        // ---- Step 2 & 3: save in the background, then refresh/report on the EDT ----
+        //  save in the background, then refresh/report on the EDT ----
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
             @Override
             protected Void doInBackground() throws Exception {
-                if (!id.equals(originalId) && studentDataService.findById(id) != null) {
-                    // The user changed the ID to one that's already taken by someone else.
-                    throw new IllegalStateException("Another student already has ID " + id + ".");
-                }
-                if (!id.equals(originalId)) {
-                    // ID is the primary key, so "changing" it means: delete the old
-                    // record and insert a new one with the new ID.
-                    studentDataService.delete(originalId);
-                    studentDataService.insert(s);
-                } else {
-                    // Normal case: same ID, just update the other fields.
                     studentDataService.update(s);
-                }
                 return null;
             }
 
@@ -378,6 +355,7 @@ public class StudentManagementUI {
             protected void done() {
                 try {
                     get();
+                    formPanel.clear();
                     refreshTable();
                     setStatus("Student \"" + name + "\" updated successfully.", Theme.SUCCESS_TEXT);
                 } catch (Exception ex) {

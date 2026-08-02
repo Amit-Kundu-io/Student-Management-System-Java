@@ -139,9 +139,7 @@ public class StudentManagementUI {
         return bar;
     }
 
-    // ======================================================================
     //  EVENT WIRING
-    // ======================================================================
 
     /**
      * Attaches listeners to every interactive component (buttons, search field,
@@ -186,9 +184,7 @@ public class StudentManagementUI {
         });
     }
 
-    // ======================================================================
     //  DATABASE LOADING (via the StudentDataService interface)
-    // ======================================================================
 
     /**
      * Runs once, right after the window becomes visible:

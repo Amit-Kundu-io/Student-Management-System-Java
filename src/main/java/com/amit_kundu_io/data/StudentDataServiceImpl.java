@@ -98,27 +98,25 @@ public class StudentDataServiceImpl implements StudentDataService {
     public Student findById(String id) {
 
         String sql = """
-                SELECT * FROM students
-                   WHERE id = ?
-                """;
-
+            SELECT * FROM students
+            WHERE id = ?
+            """;
 
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, id);
             ResultSet rs = statement.executeQuery();
 
+            // ResultSet starts before the first row, so move to the first row before reading.
+            // Since 'id' is unique, we expect at most one result.
             if (rs.next()) {
-                Student student = toStudent(rs);
-                return student;
+                return toStudent(rs);
             }
-
 
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-
 
         return null;
     }
@@ -133,8 +131,8 @@ public class StudentDataServiceImpl implements StudentDataService {
         try (PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery()) {
 
+            // Move through each row until there are no more rows.
             while (resultSet.next()) {
-
                 students.add(toStudent(resultSet));
             }
 

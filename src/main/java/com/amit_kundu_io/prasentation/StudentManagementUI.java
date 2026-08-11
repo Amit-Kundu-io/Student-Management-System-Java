@@ -284,7 +284,7 @@ public class StudentManagementUI {
         }
 
         // Build the object we'll hand to the data layer.
-        Student s = new Student(Integer.parseInt(id),name, email, course);
+        Student s = new Student(name, email, course);
 
         //  save in the background, then refresh/report on the EDT ----
         SwingWorker<Void, Void> worker = new SwingWorker<>() {

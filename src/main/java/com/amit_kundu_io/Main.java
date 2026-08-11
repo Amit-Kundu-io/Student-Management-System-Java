@@ -11,6 +11,8 @@ public class Main {
 
     public static void main(String[] args) {
 
+        System.out.println("I LoVe MeG");
+
         try {
             // Use the operating system's native look and feel
             // (Windows, macOS, Linux) instead of the default Swing theme.

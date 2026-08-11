@@ -21,6 +21,12 @@ public class Student {
         this.course = course;
     }
 
+    public Student(String name, String email, String course) {
+        this.name = name;
+        this.email = email;
+        this.course = course;
+    }
+
     public int getId() { return id; }
     public String getName() { return name; }
     public String getEmail() { return email; }
